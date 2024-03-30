@@ -3,11 +3,14 @@ class MessagesController < ApplicationController
   
   def index
     @messages = Message.where(user_id: session[:user_id])
-    @user = User.find(session[:user_id])
+    @user = User.find_by(id: session[:user_id])
+    redirect_to login_users_path, alert: 'You must be logged in to access this page.' unless @user
   end
-  # xss flaw to render t he mesage without escaping it 
+
   def show
     @message = Message.find(params[:id])
+    # Escaping the message content to prevent XSS attacks
+    @escaped_content = ERB::Util.html_escape(@message.content)
   end
   
   def new
@@ -18,12 +21,11 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params.merge(user_id: session[:user_id]))
     
     if @message.save
-      redirect_to @message, notice: "Message '#{params[:content]}' was successfully created."
+      redirect_to @message, notice: "Message was successfully created."
     else
       render :new
     end
   end
-  
   
   def edit
     @message = Message.find(params[:id])
@@ -46,6 +48,4 @@ class MessagesController < ApplicationController
   def message_params
     params.require(:message).permit(:content)
   end
-  
-  
 end
