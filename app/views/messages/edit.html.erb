@@ -1,0 +1,16 @@
+<!-- app/views/messages/edit.html.erb -->
+
+<h1>Edit Message</h1>
+
+<%= form_with model: @message, url: message_path(@message), method: :patch do |form| %>
+  <div class="field">
+    <%= form.label :content %>
+    <%= form.text_area :content %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Update Message" %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', messages_path %>
