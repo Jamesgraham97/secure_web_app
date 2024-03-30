@@ -31,17 +31,13 @@ class UsersController < ApplicationController
           username = params[:username]
           password = params[:password]
           
-          # Check for SQL injection vulnerability (simulation)
-          if username == "1' OR '1'='1'" && password == "1' OR '1'='1'"
-            @user = User.first
-          else
-            sql = "SELECT * FROM users WHERE username = '#{username}' AND password_digest = '#{password}'"
-            
-            # Logging the SQL query for debugging
-            Rails.logger.info "SQL Query: #{sql}"  # Logging the vulnerable SQL query to Rails logs
-            
-            @user = User.find_by_sql(sql).first
-          end
+          # Construct the SQL query with injected parameters
+          sql = "SELECT * FROM users WHERE username = '#{username}' AND password_digest = '#{password}'"
+          
+          # Logging the SQL query for debugging
+          Rails.logger.info "SQL Query: #{sql}"
+          
+          @user = User.find_by_sql(sql).first
           
           if @user
             session[:user_id] = @user.id
@@ -53,6 +49,7 @@ class UsersController < ApplicationController
           redirect_to login_users_path, alert: "Username and password cannot be blank."
         end
       end
+      
       
     
     def logout

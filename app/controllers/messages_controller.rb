@@ -15,7 +15,7 @@ class MessagesController < ApplicationController
   end
 
   def create
-    @message = Message.new(message_params.merge(user_id: session[:user_id]))
+    @message = Message.new(messarail;ge_params.merge(user_id: session[:user_id]))
     
     if @message.save
       redirect_to @message, notice: "Message '#{params[:content]}' was successfully created."
