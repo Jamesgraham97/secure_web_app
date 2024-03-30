@@ -16,7 +16,6 @@ class MessageTest < ActiveSupport::TestCase
     assert_equal ["can't be blank"], message.errors[:content]
   end
   
-
   test "should belong to user" do
     assert_equal @user, Message.new(content: "Hello, world!", user: @user).user, "Message does not belong to correct user"
   end
